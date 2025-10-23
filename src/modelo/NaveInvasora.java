@@ -45,4 +45,8 @@ public class NaveInvasora {
 	public int getPosY() {
 		return posY;
 	}
+
+	public void aumentarVelocidad(){
+		velocidad += velocidad/4;
+	}
 }
