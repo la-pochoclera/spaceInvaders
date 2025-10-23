@@ -44,7 +44,8 @@ public class Muro {
 	}
 
 	public void reiniciarMuro() {
-		for (SegmentoMuro s : segmentos)
+		for (SegmentoMuro s : segmentos) {
 			s.reiniciar();
+		}
 	}
 }

@@ -7,8 +7,9 @@ import java.util.Random;
 public class Oleada {
     private List<NaveInvasora> naves;
     private int direccion; // 1 = derecha, -1 = izquierda
-    
+
     private int velocidadBase;
+    private int velocidadCaida;
     private int anchoArea;
     private Random rnd;
     // Control de disparos enemigos
@@ -24,7 +25,8 @@ public class Oleada {
     }
 
     public void inicializar(int velocidadBase, int anchoArea) {
-        this.velocidadBase = velocidadBase;
+        this.velocidadBase = Math.max(1, velocidadBase);
+        this.velocidadCaida = calcularDesplazamientoCaida(this.velocidadBase);
         this.anchoArea = anchoArea;
         naves.clear();
         // reset disparos
@@ -41,7 +43,7 @@ public class Oleada {
             for (int c = 0; c < cols; c++) {
                 int x = startX + c * spacingX;
                 int y = startY + r * spacingY;
-                naves.add(new NaveInvasora(x, y, velocidadBase));
+                naves.add(new NaveInvasora(x, y, this.velocidadBase));
             }
         }
     }
@@ -49,7 +51,9 @@ public class Oleada {
     public void moverNaves() {
         // Mover naves horizontalmente según la dirección.
         for (NaveInvasora n : naves) {
-            if (n.isViva()) n.mover(direccion);
+            if (n.isViva()) {
+				n.mover(direccion);
+			}
         }
 
         // Si alcanzamos un límite, aplicar lógico para cambiar dirección y bajar naves.
@@ -61,9 +65,12 @@ public class Oleada {
 
     public boolean verificarLimites() {
         for (NaveInvasora n : naves) {
-            if (!n.isViva()) continue;
-            if (n.getPosX() <= 10 && direccion < 0) return true;
-            if (n.getPosX() >= anchoArea - 10 && direccion > 0) return true;
+            if (!n.isViva()) {
+				continue;
+			}
+            if ((n.getPosX() <= 10 && direccion < 0) || (n.getPosX() >= anchoArea - 10 && direccion > 0)) {
+				return true;
+			}
         }
         return false;
     }
@@ -74,8 +81,15 @@ public class Oleada {
 
     public void bajarNaves() {
         for (NaveInvasora n : naves) {
-            if (n.isViva()) n.bajar(20); // bajar 20 píxeles
+            if (n.isViva()) {
+				n.bajar(velocidadCaida);
+			}
         }
+    }
+
+    private int calcularDesplazamientoCaida(int velocidadHorizontal) {
+        int baseCaida = 18; // con velocidad 2 resulta en 20 de caída, manteniendo el comportamiento original
+        return Math.max(1, baseCaida + velocidadHorizontal);
     }
 
     /**
@@ -86,12 +100,20 @@ public class Oleada {
      */
     public Proyectil dispararAleatorio(int proyectilesEnemigosActivos) {
         // Si ya hay el máximo de proyectiles enemigos, no disparar
-        if (proyectilesEnemigosActivos >= maxProyectilesEnemigos) return null;
+        if (proyectilesEnemigosActivos >= maxProyectilesEnemigos) {
+			return null;
+		}
 
         // Recopilar naves vivas
         List<NaveInvasora> vivas = new ArrayList<>();
-        for (NaveInvasora n : naves) if (n.isViva()) vivas.add(n);
-        if (vivas.isEmpty()) return null;
+        for (NaveInvasora n : naves) {
+			if (n.isViva()) {
+				vivas.add(n);
+			}
+		}
+        if (vivas.isEmpty()) {
+			return null;
+		}
 
         // Determinar cooldown dinámico según número de naves vivas
         int nVivas = vivas.size();
@@ -115,12 +137,20 @@ public class Oleada {
 
     public List<NaveInvasora> obtenerNavesVivas() {
         List<NaveInvasora> res = new ArrayList<>();
-        for (NaveInvasora n : naves) if (n.isViva()) res.add(n);
+        for (NaveInvasora n : naves) {
+			if (n.isViva()) {
+				res.add(n);
+			}
+		}
         return res;
     }
 
     public boolean todasDestruidas() {
-        for (NaveInvasora n : naves) if (n.isViva()) return false;
+        for (NaveInvasora n : naves) {
+			if (n.isViva()) {
+				return false;
+			}
+		}
         return true;
     }
 

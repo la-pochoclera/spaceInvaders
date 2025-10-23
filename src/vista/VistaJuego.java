@@ -1,21 +1,28 @@
 package vista;
 
-import controlador.ControladorPrincipal;
-import modelo.Partida;
-import modelo.NaveJugador;
-import modelo.NaveInvasora;
-import modelo.Muro;
-import modelo.SegmentoMuro;
-import modelo.Proyectil;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import controlador.ControladorPrincipal;
+import modelo.Dificultad;
+import modelo.Muro;
+import modelo.NaveInvasora;
+import modelo.NaveJugador;
+import modelo.Partida;
+import modelo.Proyectil;
+import modelo.SegmentoMuro;
 
 public class VistaJuego extends JPanel {
     private VistaPrincipal padre;
@@ -59,7 +66,9 @@ public class VistaJuego extends JPanel {
 
     private Image loadImage(File f) {
         try {
-            if (f.exists()) return ImageIO.read(f);
+            if (f.exists()) {
+				return ImageIO.read(f);
+			}
         } catch (IOException e) {
             // ignore
         }
@@ -71,15 +80,21 @@ public class VistaJuego extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
-                if (code == KeyEvent.VK_LEFT) leftPressed = true;
-                if (code == KeyEvent.VK_RIGHT) rightPressed = true;
+                if (code == KeyEvent.VK_LEFT) {
+					leftPressed = true;
+				}
+                if (code == KeyEvent.VK_RIGHT) {
+					rightPressed = true;
+				}
                 if (code == KeyEvent.VK_SPACE) {
                     // mark a pending shot, consumed on next tick
                     spacePending = true;
                 }
                 // allow esc to return to menu (do not call controlador.finalizarPartida() here)
                 if (code == KeyEvent.VK_ESCAPE) {
-                    if (timer != null && timer.isRunning()) timer.stop();
+                    if (timer != null && timer.isRunning()) {
+						timer.stop();
+					}
                     padre.showMenu();
                 }
             }
@@ -87,9 +102,13 @@ public class VistaJuego extends JPanel {
             @Override
             public void keyReleased(KeyEvent e) {
                 int code = e.getKeyCode();
-                if (code == KeyEvent.VK_LEFT) leftPressed = false;
-                if (code == KeyEvent.VK_RIGHT) rightPressed = false;
-                // do not clear space here to allow one-shot behavior
+                if (code == KeyEvent.VK_LEFT) {
+					leftPressed = false;
+				}
+                if (code == KeyEvent.VK_RIGHT) {
+					rightPressed = false;
+					// do not clear space here to allow one-shot behavior
+				}
             }
         });
 
@@ -106,8 +125,12 @@ public class VistaJuego extends JPanel {
         timer = new Timer(delay, e -> {
             // Determine direction
             int dir = 0;
-            if (leftPressed && !rightPressed) dir = -1;
-            if (rightPressed && !leftPressed) dir = 1;
+            if (leftPressed && !rightPressed) {
+				dir = -1;
+			}
+            if (rightPressed && !leftPressed) {
+				dir = 1;
+			}
 
             boolean disparar = false;
             if (spacePending) {
@@ -134,12 +157,16 @@ public class VistaJuego extends JPanel {
     public void addNotify() {
         super.addNotify();
         // start timer when added to hierarchy
-        if (timer != null && !timer.isRunning()) timer.start();
+        if (timer != null && !timer.isRunning()) {
+			timer.start();
+		}
     }
 
     @Override
     public void removeNotify() {
-        if (timer != null && timer.isRunning()) timer.stop();
+        if (timer != null && timer.isRunning()) {
+			timer.stop();
+		}
         super.removeNotify();
     }
 
@@ -149,13 +176,17 @@ public class VistaJuego extends JPanel {
         leftPressed = false;
         rightPressed = false;
         spacePending = false;
-        if (timer != null && !timer.isRunning()) timer.start();
+        if (timer != null && !timer.isRunning()) {
+			timer.start();
+		}
         requestFocusInWindow();
     }
 
     // Public control to stop the game loop when leaving this view
     public void detener() {
-        if (timer != null && timer.isRunning()) timer.stop();
+        if (timer != null && timer.isRunning()) {
+			timer.stop();
+		}
     }
 
     @Override
@@ -200,7 +231,9 @@ public class VistaJuego extends JPanel {
             if (p.getOleada() != null) {
                 List<NaveInvasora> naves = p.getOleada().getNaves();
                 for (NaveInvasora n : naves) {
-                    if (!n.isViva()) continue;
+                    if (!n.isViva()) {
+						continue;
+					}
                     int w = 30;
                     int h = 18;
                     int x = n.getPosX() - w / 2;
@@ -218,7 +251,9 @@ public class VistaJuego extends JPanel {
             List<Muro> muros = p.getMuros();
             for (Muro m : muros) {
                 for (SegmentoMuro s : m.getSegmentos()) {
-                    if (s.estaDestruido()) continue;
+                    if (s.estaDestruido()) {
+						continue;
+					}
                     int w = 10;
                     int h = 6;
                     int x = s.getPosX() - w / 2;
@@ -235,7 +270,9 @@ public class VistaJuego extends JPanel {
             // Draw projectiles
             List<Proyectil> proyectiles = p.getProyectiles();
             for (Proyectil pr : proyectiles) {
-                if (!pr.isActivo()) continue;
+                if (!pr.isActivo()) {
+					continue;
+				}
                 int w = pr.isAliado() ? 4 : 4;
                 int h = pr.isAliado() ? 10 : 10;
                 int x = pr.getPosX() - w / 2;
@@ -249,9 +286,11 @@ public class VistaJuego extends JPanel {
             }
 
             // HUD: puntos, vidas, creditos
-            String hud = String.format("Puntos: %d   Vidas: %d   Créditos: %d",
-                    p.getPuntuacion(), nj != null ? nj.getVidas() : 0,
-                    controlador.getSistema().getCreditosDisponibles());
+        Dificultad dificultadActual = p.getDificultad();
+        String dificultadTexto = dificultadActual != null ? dificultadActual.getEtiqueta() : "-";
+        String hud = String.format("Puntos: %d   Vidas: %d   Créditos: %d   Dificultad: %s",
+            p.getPuntuacion(), nj != null ? nj.getVidas() : 0,
+            controlador.getSistema().getCreditosDisponibles(), dificultadTexto);
             g2.setColor(Color.WHITE);
             g2.drawString(hud, 10, 20);
         } finally {

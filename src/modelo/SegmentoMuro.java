@@ -23,7 +23,9 @@ public class SegmentoMuro {
         }
         double porcentaje = esAliado ? 0.10 : 0.05; // 10% aliado, 5% enemigo
         salud -= porcentaje;
-        if (salud < 0) salud = 0;
+        if (salud < 0) {
+			salud = 0;
+		}
     }
 
     public boolean estaDestruido() {

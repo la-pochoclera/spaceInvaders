@@ -16,11 +16,16 @@ public class Partida {
 	private boolean terminada;
 	private int puntuacion;
 	private int proximoUmbralVidaExtra;
+	private Dificultad dificultad;
 
 	private static final int ANCHO_DEFAULT = 800;
 	private static final int ALTO_DEFAULT = 600;
 
 	public Partida() {
+		this(Dificultad.CADETE);
+	}
+
+	public Partida(Dificultad dificultad) {
 		this.anchoArea = ANCHO_DEFAULT;
 		this.altoArea = ALTO_DEFAULT;
 		this.muros = new ArrayList<>();
@@ -28,6 +33,7 @@ public class Partida {
 		this.puntuacion = 0;
 		this.proximoUmbralVidaExtra = 500;
 		this.terminada = false;
+		this.dificultad = dificultad != null ? dificultad : Dificultad.CADETE;
 	}
 
 	public void inicializar() {
@@ -40,7 +46,7 @@ public class Partida {
 
 		// Crear oleada
 		this.oleada = new Oleada();
-		this.oleada.inicializar(2, anchoArea);
+		this.oleada.inicializar(ajustarVelocidad(calcularVelocidadBaseNivel()), anchoArea);
 
 		// Crear muros
 		inicializarMuros();
@@ -55,8 +61,9 @@ public class Partida {
 	}
 
 	public void actualizarLogica() {
-		if (!enEjecucion || terminada)
+		if (!enEjecucion || terminada) {
 			return;
+		}
 
 		// 1. Mover naves
 		oleada.moverNaves();
@@ -65,16 +72,19 @@ public class Partida {
 		// Contar proyectiles enemigos activos y pedir a la oleada que dispare si procede
 		int proyectilesEnemigosActivos = 0;
 		for (Proyectil p : proyectiles) {
-			if (p.isActivo() && !p.isAliado())
+			if (p.isActivo() && !p.isAliado()) {
 				proyectilesEnemigosActivos++;
+			}
 		}
 		Proyectil disparoEnemigo = oleada.dispararAleatorio(proyectilesEnemigosActivos);
-		if (disparoEnemigo != null)
+		if (disparoEnemigo != null) {
 			proyectiles.add(disparoEnemigo);
+		}
 
 		// 3. Mover proyectiles
-		for (Proyectil p : proyectiles)
+		for (Proyectil p : proyectiles) {
 			p.mover();
+		}
 
 		// 4. Verificar colisiones
 		verificarColisiones();
@@ -90,9 +100,10 @@ public class Partida {
 			nivelActual++;
 			// bonus y reiniciar oleada con mayor velocidad
 			puntuacion += 200;
-			oleada.inicializar(2 + nivelActual, anchoArea);
-			for (Muro m : muros)
+			oleada.inicializar(ajustarVelocidad(calcularVelocidadBaseNivel()), anchoArea);
+			for (Muro m : muros) {
 				m.reiniciarMuro();
+			}
 		}
 
 		if (!naveJugador.estaVivo()) {
@@ -101,8 +112,9 @@ public class Partida {
 	}
 
 	public void procesarInput(int direccion, boolean disparar) {
-		if (!enEjecucion || terminada)
+		if (!enEjecucion || terminada) {
 			return;
+		}
 		naveJugador.mover(direccion, anchoArea);
 		if (disparar) {
 			// Verificar si ya existe un proyectil aliado activo: el jugador sólo puede tener uno a la vez
@@ -115,19 +127,18 @@ public class Partida {
 			}
 			if (!aliadoActivo) {
 				Proyectil pj = naveJugador.disparar();
-				if (pj != null)
+				if (pj != null) {
 					proyectiles.add(pj);
+				}
 			}
 		}
 	}
 
 	private void verificarColisiones() {
-		// Colisiones entre proyectiles aliados y naves invasoras, y con muros
-		Iterator<Proyectil> it = proyectiles.iterator();
-		while (it.hasNext()) {
-			Proyectil p = it.next();
-			if (!p.isActivo())
+		for (Proyectil p : proyectiles) {
+			if (!p.isActivo()) {
 				continue;
+			}
 
 			if (p.isAliado()) {
 				// con naves
@@ -140,8 +151,9 @@ public class Partida {
 						break;
 					}
 				}
-				if (!p.isActivo())
+				if (!p.isActivo()) {
 					continue;
+				}
 				// con muros
 				for (Muro m : muros) {
 					for (SegmentoMuro s : m.getSegmentos()) {
@@ -151,8 +163,9 @@ public class Partida {
 							break;
 						}
 					}
-					if (!p.isActivo())
+					if (!p.isActivo()) {
 						break;
+					}
 				}
 			} else {
 				// proyectil enemigo: con jugador
@@ -170,8 +183,9 @@ public class Partida {
 							break;
 						}
 					}
-					if (!p.isActivo())
+					if (!p.isActivo()) {
 						break;
+					}
 				}
 			}
 		}
@@ -200,6 +214,14 @@ public class Partida {
 		}
 	}
 
+	private int ajustarVelocidad(int velocidadBase) {
+		return dificultad.aplicarIncremento(velocidadBase);
+	}
+
+	private int calcularVelocidadBaseNivel() {
+		return Math.max(1, nivelActual + 1);
+	}
+
 	// Getters y utilidades
 	public boolean estaTerminada() {
 		return terminada;
@@ -223,5 +245,9 @@ public class Partida {
 
 	public List<Proyectil> getProyectiles() {
 		return proyectiles;
+	}
+
+	public Dificultad getDificultad() {
+		return dificultad;
 	}
 }

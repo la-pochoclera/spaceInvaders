@@ -1,7 +1,5 @@
 package modelo;
 
-import modelo.Ranking;
-
 public class Sistema {
     private int creditosCargados;
     private int creditosDisponibles;

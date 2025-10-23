@@ -1,11 +1,13 @@
 package vista;
 
-import controlador.ControladorPrincipal;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.CardLayout;
-import java.awt.BorderLayout;
+import javax.swing.WindowConstants;
+
+import controlador.ControladorPrincipal;
 
 public class VistaPrincipal extends JFrame {
     public static final String MENU = "MENU";
@@ -27,7 +29,7 @@ public class VistaPrincipal extends JFrame {
 
     private void initUI() {
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         cardLayout = new CardLayout();
@@ -50,23 +52,33 @@ public class VistaPrincipal extends JFrame {
 
     public void showMenu() {
         // parar juego si estaba en ejecución
-        if (vistaJuego != null) vistaJuego.detener();
+        if (vistaJuego != null) {
+			vistaJuego.detener();
+		}
         // actualizar créditos antes de mostrar
-        if (vistaMenu != null) vistaMenu.actualizarCreditos();
+        if (vistaMenu != null) {
+			vistaMenu.actualizarCreditos();
+		}
         cardLayout.show(cardsPanel, MENU);
     }
 
     public void showJuego() {
         cardLayout.show(cardsPanel, JUEGO);
         // iniciar loop/timer del panel de juego
-        if (vistaJuego != null) vistaJuego.iniciar();
+        if (vistaJuego != null) {
+			vistaJuego.iniciar();
+		}
     }
 
     public void showRanking() {
         // parar juego si estaba en ejecución
-        if (vistaJuego != null) vistaJuego.detener();
+        if (vistaJuego != null) {
+			vistaJuego.detener();
+		}
         // actualizar ranking antes de mostrar
-        if (vistaRanking != null) vistaRanking.actualizarRanking();
+        if (vistaRanking != null) {
+			vistaRanking.actualizarRanking();
+		}
         cardLayout.show(cardsPanel, RANKING);
     }
 }

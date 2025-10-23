@@ -20,10 +20,12 @@ public class NaveJugador {
 	 */
 	public void mover(int direccion, int anchoArea) {
 		posX += direccion * velocidad;
-		if (posX < 0)
+		if (posX < 0) {
 			posX = 0;
-		if (posX > anchoArea)
+		}
+		if (posX > anchoArea) {
 			posX = anchoArea;
+		}
 	}
 
 	/**
@@ -40,8 +42,9 @@ public class NaveJugador {
 
 	public void recibirImpacto() {
 		vidas--;
-		if (vidas < 0)
+		if (vidas < 0) {
 			vidas = 0;
+		}
 	}
 
 	public void ganarVidaExtra() {

@@ -1,7 +1,8 @@
 package controlador;
 
-import modelo.Sistema;
+import modelo.Dificultad;
 import modelo.Partida;
+import modelo.Sistema;
 
 public class ControladorPrincipal {
 	private Sistema sistema;
@@ -17,12 +18,17 @@ public class ControladorPrincipal {
 	 * inicializa la partida.
 	 */
 	public void iniciarNuevaPartida() {
+		iniciarNuevaPartida(Dificultad.CADETE);
+	}
+
+	public void iniciarNuevaPartida(Dificultad dificultad) {
 		if (!sistema.tieneCreditos()) {
 			System.out.println("No hay créditos disponibles.");
 			return;
 		}
 		sistema.consumirCredito();
-		partidaActual = new Partida();
+		Dificultad dificultadSeleccionada = dificultad != null ? dificultad : Dificultad.CADETE;
+		partidaActual = new Partida(dificultadSeleccionada);
 		partidaActual.inicializar();
 		System.out.println("Partida iniciada.");
 	}
@@ -32,8 +38,9 @@ public class ControladorPrincipal {
 	 * finaliza si es necesario.
 	 */
 	public void actualizar() {
-		if (partidaActual == null)
+		if (partidaActual == null) {
 			return;
+		}
 		partidaActual.actualizarLogica();
 		if (partidaActual.estaTerminada()) {
 			finalizarPartida();
@@ -44,8 +51,9 @@ public class ControladorPrincipal {
 	 * Procesa la entrada (dirección y disparo) delegando a la partida.
 	 */
 	public void procesarInput(int direccion, boolean disparar) {
-		if (partidaActual == null)
+		if (partidaActual == null) {
 			return;
+		}
 		partidaActual.procesarInput(direccion, disparar);
 	}
 
@@ -53,8 +61,9 @@ public class ControladorPrincipal {
 	 * Finaliza la partida actual: actualiza ranking y pone partidaActual a null.
 	 */
 	public void finalizarPartida() {
-		if (partidaActual == null)
+		if (partidaActual == null) {
 			return;
+		}
 		int puntos = partidaActual.getPuntuacion();
 		sistema.actualizarRanking("Jugador", puntos);
 		System.out.println("Partida finalizada. Puntos: " + puntos);
@@ -68,5 +77,9 @@ public class ControladorPrincipal {
 
 	public Partida getPartidaActual() {
 		return partidaActual;
+	}
+
+	public Dificultad getDificultadActual() {
+		return partidaActual != null ? partidaActual.getDificultad() : null;
 	}
 }
