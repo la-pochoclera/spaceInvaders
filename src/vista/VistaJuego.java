@@ -131,6 +131,12 @@ public class VistaJuego extends JPanel {
             if (rightPressed && !leftPressed) {
 				dir = 1;
 			}
+            if (leftPressed && !rightPressed) {
+				dir = -1;
+			}
+            if (rightPressed && !leftPressed) {
+				dir = 1;
+			}
 
             boolean disparar = false;
             if (spacePending) {
@@ -160,10 +166,16 @@ public class VistaJuego extends JPanel {
         if (timer != null && !timer.isRunning()) {
 			timer.start();
 		}
+        if (timer != null && !timer.isRunning()) {
+			timer.start();
+		}
     }
 
     @Override
     public void removeNotify() {
+        if (timer != null && timer.isRunning()) {
+			timer.stop();
+		}
         if (timer != null && timer.isRunning()) {
 			timer.stop();
 		}
@@ -198,10 +210,8 @@ public class VistaJuego extends JPanel {
             // Draw background image if available
             if (bgImg != null) {
                 g2.drawImage(bgImg, 0, 0, getWidth(), getHeight(), null);
-            } else {
-                g2.setColor(getBackground());
-                g2.fillRect(0, 0, getWidth(), getHeight());
             }
+
             // Draw HUD background
             g2.setColor(Color.WHITE);
             g2.setFont(g2.getFont().deriveFont(14f));
@@ -221,9 +231,6 @@ public class VistaJuego extends JPanel {
                 int y = nj.getPosY() - shipH / 2;
                 if (playerImg != null) {
                     g2.drawImage(playerImg, x, y, shipW, shipH, null);
-                } else {
-                    g2.setColor(Color.GREEN);
-                    g2.fillRect(x, y, shipW, shipH);
                 }
             }
 
@@ -240,9 +247,6 @@ public class VistaJuego extends JPanel {
                     int y = n.getPosY() - h / 2;
                     if (invaderImg != null) {
                         g2.drawImage(invaderImg, x, y, w, h, null);
-                    } else {
-                        g2.setColor(Color.RED);
-                        g2.fillRect(x, y, w, h);
                     }
                 }
             }
@@ -279,9 +283,6 @@ public class VistaJuego extends JPanel {
                 int y = pr.getPosY() - h / 2;
                 if (proyectilImg != null) {
                     g2.drawImage(proyectilImg, x, y, w, h, null);
-                } else {
-                    g2.setColor(Color.YELLOW);
-                    g2.fillRect(x, y, w, h);
                 }
             }
 

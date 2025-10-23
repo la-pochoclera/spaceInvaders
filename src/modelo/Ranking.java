@@ -6,33 +6,33 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Ranking {
-    private List<EntradaRanking> entradas;
+	private List<EntradaRanking> entradas;
 
-    public Ranking() {
-        this.entradas = new ArrayList<>();
-    }
+	public Ranking() {
+		this.entradas = new ArrayList<>();
+	}
 
-    public void agregarOActualizarEntrada(String nombre, int puntuacion) {
-        // Buscar existente
-        for (EntradaRanking e : entradas) {
-            if (e.getNombre().equalsIgnoreCase(nombre)) {
-                if (puntuacion > e.getPuntuacion()) {
-                    e.setPuntuacion(puntuacion);
-                }
-                ordenar();
-                return;
-            }
-        }
-        // No existe -> añadir
-        entradas.add(new EntradaRanking(nombre, puntuacion));
-        ordenar();
-    }
+	public void agregarOActualizarEntrada(String nombre, int puntuacion) {
+		// Buscar existente
+		for (EntradaRanking e : entradas) {
+			if (e.getNombre().equalsIgnoreCase(nombre)) {
+				if (puntuacion > e.getPuntuacion()) {
+					e.setPuntuacion(puntuacion);
+				}
+				ordenarRanking();
+				return;
+			}
+		}
+		// No existe -> añadir
+		entradas.add(new EntradaRanking(nombre, puntuacion));
+		ordenarRanking();
+	}
 
-    private void ordenar() {
-        Collections.sort(entradas, Comparator.comparingInt(EntradaRanking::getPuntuacion).reversed());
-    }
+	public void ordenarRanking() {
+		Collections.sort(entradas, Comparator.comparingInt(EntradaRanking::getPuntuacion).reversed());
+	}
 
-    public List<EntradaRanking> getEntradas() {
-        return new ArrayList<>(entradas);
-    }
+	public List<EntradaRanking> getEntradas() {
+		return new ArrayList<>(entradas);
+	}
 }

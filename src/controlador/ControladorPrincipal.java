@@ -59,27 +59,32 @@ public class ControladorPrincipal {
 
 	/**
 	 * Finaliza la partida actual: actualiza ranking y pone partidaActual a null.
+	 * El parámetro "voluntariamente" permite distinguir un fin voluntario del involuntario,
+	 * pero en esta implementación no altera la lógica de negocio (compatibilidad con comportamiento previo).
 	 */
-	public void finalizarPartida() {
+	public void finalizarPartida(boolean voluntariamente) {
 		if (partidaActual == null) {
 			return;
 		}
 		int puntos = partidaActual.getPuntuacion();
 		sistema.actualizarRanking("Jugador", puntos);
-		System.out.println("Partida finalizada. Puntos: " + puntos);
+		System.out.println("Partida finalizada. Puntos: " + puntos + (voluntariamente ? " (voluntaria)" : ""));
 		partidaActual = null;
 	}
 
-	// Accesores
+	public void finalizarPartida() {
+		finalizarPartida(false);
+	}
+
+	public boolean estaPartidaActiva() {
+		return partidaActual != null && !partidaActual.estaTerminada();
+	}
+
 	public Sistema getSistema() {
 		return sistema;
 	}
 
 	public Partida getPartidaActual() {
 		return partidaActual;
-	}
-
-	public Dificultad getDificultadActual() {
-		return partidaActual != null ? partidaActual.getDificultad() : null;
 	}
 }

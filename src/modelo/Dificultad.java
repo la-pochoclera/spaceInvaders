@@ -37,11 +37,13 @@ public class Dificultad {
     }
 
     public static Dificultad desdeEtiqueta(String etiquetaBuscada) {
-        if (etiquetaBuscada == null)
-            return null;
+        if (etiquetaBuscada == null) {
+			return null;
+		}
         for (Dificultad dificultad : PREDEFINIDAS) {
-            if (dificultad.etiqueta.equalsIgnoreCase(etiquetaBuscada))
-                return dificultad;
+            if (dificultad.etiqueta.equalsIgnoreCase(etiquetaBuscada)) {
+				return dificultad;
+			}
         }
         return null;
     }

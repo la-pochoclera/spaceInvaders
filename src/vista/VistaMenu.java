@@ -22,8 +22,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import controlador.ControladorPrincipal;
 import modelo.Dificultad;
