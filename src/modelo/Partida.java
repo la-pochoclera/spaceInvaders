@@ -233,7 +233,7 @@ public class Partida {
 	public void cambiarNivel() {
 		// Reinicializa oleada con mayor velocidad base
 		if (oleada != null) {
-			oleada.inicializar(calcularVelocidadNaves(), anchoArea);
+			oleada.inicializar(ajustarVelocidad(calcularVelocidadNaves()), anchoArea);
 		}
 	}
 

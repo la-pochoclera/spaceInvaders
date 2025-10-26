@@ -55,7 +55,7 @@ public class Dificultad {
      */
     public int aplicarIncremento(int velocidadBase) {
         double ajustada = velocidadBase * (1.0 + incrementoVelocidad);
-        return Math.max(1, (int) Math.round(ajustada));
+        return Math.max(1, (int) Math.ceil(ajustada));
     }
 
     @Override
