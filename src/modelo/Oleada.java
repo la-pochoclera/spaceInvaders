@@ -66,7 +66,10 @@ public class Oleada {
 			if (!n.isViva()) {
 				continue;
 			}
-			if ((n.getPosX() <= 10 && direccion < 0) || (n.getPosX() >= anchoArea - 10 && direccion > 0)) {
+			if (n.getPosX() <= 10 && direccion < 0) {
+				return true;
+			}
+			if (n.getPosX() >= anchoArea - 10 && direccion > 0) {
 				return true;
 			}
 		}
@@ -90,28 +93,25 @@ public class Oleada {
 	 * Intento de disparo de un enemigo. Se respeta un límite máximo de proyectiles
 	 * enemigos simultáneos y un cooldown dinámico que incrementa cuando quedan
 	 * pocas naves.
-	 *
+	 * 
 	 * @param proyectilesEnemigosActivos cantidad actual de proyectiles enemigos
 	 *                                   activos en pantalla
 	 * @return nuevo Proyectil enemigo o null si no se puede disparar ahora
 	 */
 	public Proyectil dispararAleatorio(int proyectilesEnemigosActivos) {
 		// Si ya hay el máximo de proyectiles enemigos, no disparar
-		if (proyectilesEnemigosActivos >= maxProyectilesEnemigos) {
+		if (proyectilesEnemigosActivos >= maxProyectilesEnemigos)
 			return null;
-		}
 
 		// Recopilar naves vivas
 		List<NaveInvasora> vivas = new ArrayList<>();
 		for (NaveInvasora n : naves) {
-			if (n.isViva()) {
+			if (n.isViva())
 				vivas.add(n);
-			}
 		}
 
-		if (vivas.isEmpty()) {
+		if (vivas.isEmpty())
 			return null;
-		}
 
 		// Determinar cooldown dinámico según número de naves vivas
 		int nVivas = vivas.size();
@@ -134,19 +134,16 @@ public class Oleada {
 
 	public List<NaveInvasora> obtenerNavesVivas() {
 		List<NaveInvasora> res = new ArrayList<>();
-		for (NaveInvasora n : naves) {
-			if (n.isViva()) {
+		for (NaveInvasora n : naves)
+			if (n.isViva())
 				res.add(n);
-			}
-		}
 		return res;
 	}
 
 	public boolean todasDestruidas() {
 		for (NaveInvasora n : naves) {
-			if (n.isViva()) {
+			if (n.isViva())
 				return false;
-			}
 		}
 		return true;
 	}

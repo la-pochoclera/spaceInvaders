@@ -24,12 +24,12 @@ public class Proyectil {
 			return;
 		}
 		if (esAliado) {
-			posY -= velocidad;
+			posY = posY - velocidad;
 		} else {
-			posY += velocidad;
+			posY = posY + velocidad;
 		}
 	}
-
+	
 	public void destruir() {
 		this.activo = false;
 	}
@@ -38,7 +38,7 @@ public class Proyectil {
 		return posX < 0 || posX > ancho || posY < 0 || posY > alto;
 	}
 
-	// Getters / setters
+	// Getters y setters
 	public int getPosX() {
 		return posX;
 	}

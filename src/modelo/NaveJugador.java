@@ -9,6 +9,10 @@ public class NaveJugador {
 	private int velocidad; // pixels por tick al moverse
 	private int proximoUmbralVidaExtra;
 
+	// Límites dinámicos del área de juego
+	private int anchoMax; // por defecto 800
+	private int altoMax; // por defecto 600
+
 	public NaveJugador(int posX, int posY, int vidas) {
 		this.posX = posX;
 		this.posY = posY;
@@ -17,20 +21,33 @@ public class NaveJugador {
 		this.velocidad = 8;
 		this.nombre = "Jugador123";
 		this.proximoUmbralVidaExtra = 500;
+		this.anchoMax = 800;
+		this.altoMax = 600;
 	}
 
+	public void setLimites(int ancho, int alto) {
+		this.anchoMax = Math.max(1, ancho);
+		this.altoMax = Math.max(1, alto);
+		if (posX < 0)
+			posX = 0;
+		if (posX > anchoMax)
+			posX = anchoMax;
+		if (posY < 0)
+			posY = 0;
+		if (posY > altoMax)
+			posY = altoMax;
+	}
 	/**
 	 * Mueve la nave horizontalmente; direccion: -1 (izq), 0, 1 (der). Respeta
 	 * límites básicos del área (0..800) para no salir de pantalla.
 	 */
 	public void mover(int direccion) {
-		posX =posX+ direccion * velocidad;
-
+		posX = posX + direccion * velocidad;
 		if (posX < 0) {
 			posX = 0;
 		}
-		if (posX > 800) {// límite por defecto (coincide con ANCHO_DEFAULT)
-			posX = 800;
+		if (posX > anchoMax) {
+			posX = anchoMax;
 		}
 	}
 
@@ -52,7 +69,7 @@ public class NaveJugador {
 
 	public void ganarVidaExtra() {
 		vidas++;
-		proximoUmbralVidaExtra += 500;
+		proximoUmbralVidaExtra =proximoUmbralVidaExtra + 500;
 	}
 
 	public void perderVida() {
@@ -66,7 +83,7 @@ public class NaveJugador {
 		return vidas > 0;
 	}
 
-	boolean aplicarVidaExtraSiCorresponde() {
+	boolean aplicarVidaExtra() {
 		if (puntuacion >= proximoUmbralVidaExtra) {
 			ganarVidaExtra();
 			return true;

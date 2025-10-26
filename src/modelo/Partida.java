@@ -36,7 +36,7 @@ public class Partida {
 		this.nivelActual = 1;
 		this.enEjecucion = true;
 
-		// Crear jugador centrado en la parte inferior
+		// centrado en la parte inferior
 		this.naveJugador = new NaveJugador(anchoArea / 2, altoArea - 50, 3);
 
 		// Crear oleada
@@ -49,7 +49,8 @@ public class Partida {
 
 	private void inicializarMuros() {
 		muros.clear();
-		int[] posicionesX = { 200, 400, 600 };
+		// 4 muros: 1/5, 2/5, 3/5, 4/5 del ancho
+		int[] posicionesX = { anchoArea / 5, (anchoArea * 2) / 5, (anchoArea * 3) / 5, (anchoArea * 4) / 5 };
 		for (int x : posicionesX) {
 			Muro m = new Muro(x, altoArea - 150);
 			m.inicializar();
@@ -58,30 +59,31 @@ public class Partida {
 	}
 
 	public void actualizarLogica() {
-		if (!enEjecucion || terminada) {
+		if (!enEjecucion || terminada)
 			return;
-		}
 
 		// 1. Mover naves
 		oleada.moverNaves();
 
-		// 2. Disparo enemigo aleatorio coordinado por Oleada (cooldown/limites) y
-		// creado por NaveInvasora
-		int proyectilesEnemigosActivos = 0;
-		for (Proyectil p : proyectiles) {
-			if (p.isActivo() && !p.isAliado()) {
-				proyectilesEnemigosActivos++;
-			}
-		}
-		Proyectil disparoEnemigo = oleada.dispararAleatorio(proyectilesEnemigosActivos);
-		if (disparoEnemigo != null) {
-			proyectiles.add(disparoEnemigo);
+		// 1.1 Colisión invasores-jugador => termina la partida
+		if (ColisionInvasoresConJugador()) {
+			terminada = true;
+			return;
 		}
 
-		// 3. Mover proyectiles
+		// 2. Disparo enemigo aleatorio
+		int proyectilesEnemigosActivos = 0;
 		for (Proyectil p : proyectiles) {
-			p.mover();
+			if (p.isActivo() && !p.isAliado())
+				proyectilesEnemigosActivos++;
 		}
+		Proyectil disparoEnemigo = oleada.dispararAleatorio(proyectilesEnemigosActivos);
+		if (disparoEnemigo != null)
+			proyectiles.add(disparoEnemigo);
+
+		// 3. Mover proyectiles
+		for (Proyectil p : proyectiles)
+			p.mover();
 
 		// 4. Verificar colisiones
 		verificarColisiones();
@@ -89,33 +91,29 @@ public class Partida {
 		// 5. Limpiar proyectiles inactivos o fuera de área
 		limpiarProyectiles();
 
-		// 6. Verificar vida extra (delegado a NaveJugador)
+		// 6. Vida extra
 		verificarVidaExtra();
 
-		// 7. Comprobar fin de nivel u otras condiciones
+		// 7. Fin de oleada
 		if (oleada.todasDestruidas()) {
 			nivelActual++;
-			// bonus y reiniciar oleada con mayor velocidad
 			naveJugador.sumarPuntos(200);
 			cambiarNivel();
-			for (Muro m : muros) {
+			for (Muro m : muros)
 				m.reiniciarMuro();
-			}
 		}
 
+		// Game over por quedarse sin vidas
 		if (!naveJugador.isVivo()) {
 			terminada = true;
 		}
 	}
 
 	public void procesarInput(int direccion, boolean disparar) {
-		if (!enEjecucion || terminada) {
+		if (!enEjecucion || terminada)
 			return;
-		}
 		naveJugador.mover(direccion);
-		if (disparar) {
-			// Verificar si ya existe un proyectil aliado activo: el jugador sólo puede
-			// tener uno a la vez
+		if (disparar) { // Solo un proyectil aliado activo a la vez
 			boolean aliadoActivo = false;
 			for (Proyectil p : proyectiles) {
 				if (p.isActivo() && p.isAliado()) {
@@ -125,9 +123,8 @@ public class Partida {
 			}
 			if (!aliadoActivo) {
 				Proyectil pj = naveJugador.disparar();
-				if (pj != null) {
+				if (pj != null)
 					proyectiles.add(pj);
-				}
 			}
 		}
 	}
@@ -137,7 +134,11 @@ public class Partida {
 	}
 
 	public int getPuntuacion() {
-		return naveJugador != null ? naveJugador.getPuntuacion() : 0;
+		if (naveJugador != null) {
+			return naveJugador.getPuntuacion();
+		} else {
+			return 0;
+		}
 	}
 
 	public NaveJugador getNaveJugador() {
@@ -157,105 +158,101 @@ public class Partida {
 	}
 
 	// UML: agregarProyectil
-	public void agregarProyectil(Proyectil proyectil) {
-		if (proyectil != null) {
-			this.proyectiles.add(proyectil);
-		}
-	}
+    public void agregarProyectil(Proyectil proyectil) {
+        if (proyectil != null)
+            this.proyectiles.add(proyectil);
+    }
 
-	public void verificarColisiones() {
-		// Colisiones entre proyectiles aliados y naves invasoras, y con muros
-		for (Proyectil p : proyectiles) {
-			if (!p.isActivo()) {
-				continue;
-			}
+    // verificarColisiones entre proyectiles y naves/muros/jugador
+    public void verificarColisiones() {
+        for (Proyectil p : proyectiles) {
+            if (!p.isActivo())
+                continue;
 
-			if (p.isAliado()) {
-				// con naves
-				for (NaveInvasora n : oleada.getNaves()) {
-					if (n.isViva() && proximidad(p.getPosX(), p.getPosY(), n.getPosX(), n.getPosY(), 20)) {
-						n.recibirImpacto();
-						p.destruir();
-						naveJugador.sumarPuntos(10);
-						break;
-					}
-				}
-				if (!p.isActivo()) {
-					continue;
-				}
-				// con muros
-				for (Muro m : muros) {
-					for (SegmentoMuro s : m.getSegmentos()) {
-						if (!s.estaDestruido() && proximidad(p.getPosX(), p.getPosY(), s.getPosX(), s.getPosY(), 15)) {
-							s.recibirImpacto(true);
-							p.destruir();
-							break;
-						}
-					}
-					if (!p.isActivo()) {
-						break;
-					}
-				}
-			} else {
-				// proyectil enemigo: con jugador
-				if (proximidad(p.getPosX(), p.getPosY(), naveJugador.getPosX(), naveJugador.getPosY(), 25)) {
-					naveJugador.recibirImpacto();
-					p.destruir();
-					continue;
-				}
-				// con muros
-				for (Muro m : muros) {
-					for (SegmentoMuro s : m.getSegmentos()) {
-						if (!s.estaDestruido() && proximidad(p.getPosX(), p.getPosY(), s.getPosX(), s.getPosY(), 15)) {
-							s.recibirImpacto(false);
-							p.destruir();
-							break;
-						}
-					}
-					if (!p.isActivo()) {
-						break;
-					}
-				}
-			}
-		}
-	}
+            if (p.isAliado()) {
+                for (NaveInvasora n : oleada.getNaves()) {
+                    if (n.isViva() && proximidad(p.getPosX(), p.getPosY(), n.getPosX(), n.getPosY(), 20)) {
+                        n.recibirImpacto();
+                        p.destruir();
+                        naveJugador.sumarPuntos(10);
+                        break;
+                    }
+                }
+                if (!p.isActivo())
+                    continue;
+                for (Muro m : muros) {
+                    for (SegmentoMuro s : m.getSegmentos()) {
+                        if (!s.estaDestruido() && proximidad(p.getPosX(), p.getPosY(), s.getPosX(), s.getPosY(), 15)) {
+                            // Cambio: delegar el daño al muro completo (aplicarImpacto)
+                            m.recibirImpacto(true);
+                            p.destruir();
+                            break;
+                        }
+                    }
+                    if (!p.isActivo())
+                        break;
+                }
+            } else {
+                if (proximidad(p.getPosX(), p.getPosY(), naveJugador.getPosX(), naveJugador.getPosY(), 25)) {
+                    naveJugador.recibirImpacto();
+                    p.destruir();
+                    continue;
+                }
+                for (Muro m : muros) {
+                    for (SegmentoMuro s : m.getSegmentos()) {
+                        if (!s.estaDestruido() && proximidad(p.getPosX(), p.getPosY(), s.getPosX(), s.getPosY(), 15)) {
+                            // Cambio: delegar el daño al muro completo (aplicarImpacto)
+                            m.recibirImpacto(false);
+                            p.destruir();
+                            break;
+                        }
+                    }
+                    if (!p.isActivo())
+                        break;
+                }
+            }
+        }
+    }
 
-	public void limpiarProyectiles() {
-		Iterator<Proyectil> iterator = proyectiles.iterator();
-		while (iterator.hasNext()) {
-			Proyectil p = iterator.next();
-			if (!p.isActivo() || p.estaFueraDeArea(anchoArea, altoArea)) {
-				iterator.remove();
-			}
-		}
-	}
-
+    public void limpiarProyectiles() {
+        Iterator<Proyectil> iterator = proyectiles.iterator();
+        while (iterator.hasNext()) {
+            Proyectil p = iterator.next();
+            if (!p.isActivo() || p.estaFueraDeArea(anchoArea, altoArea)) {
+                iterator.remove();
+            }
+        }
+    }
+    
+    // Cambia el nivel actual y ajusta la velocidad de las naves invasoras
 	public void cambiarNivel() {
-		// Reinicializa oleada con mayor velocidad base
 		if (oleada != null) {
 			oleada.inicializar(ajustarVelocidad(calcularVelocidadNaves()), anchoArea);
 		}
 	}
-
+	
+    // Calcula la velocidad de las naves invasoras según el nivel actual
 	public int calcularVelocidadNaves() {
-		// velocidad base crece con el nivel (simple): 2 + nivelActual
 		return 2 + nivelActual;
 	}
 
 	public void verificarVidaExtra() {
 		if (naveJugador != null) {
-			naveJugador.aplicarVidaExtraSiCorresponde();
+			naveJugador.aplicarVidaExtra();
 		}
 	}
 
-	private int ajustarVelocidad(int velocidadBase) {
-		return dificultad.aplicarIncremento(velocidadBase);
+	
+	private boolean ColisionInvasoresConJugador() {
+		final int UMBRAL = 10;// distancia mínima para considerar colisión
+		for (NaveInvasora n : oleada.getNaves()) {
+			if (n.isViva()
+					&& proximidad(n.getPosX(), n.getPosY(), naveJugador.getPosX(), naveJugador.getPosY(), UMBRAL)) {
+				return true;
+			}
+		}
+		return false;
 	}
-
-	private int calcularVelocidadBaseNivel() {
-		return Math.max(1, nivelActual + 1);
-	}
-
 	private boolean proximidad(int x1, int y1, int x2, int y2, int umbral) {
 		int dx = x1 - x2;
 		int dy = y1 - y2;
@@ -265,4 +262,13 @@ public class Partida {
 	public Dificultad getDificultad() {
 		return dificultad;
 	}
+	// a ver
+	private int ajustarVelocidad(int velocidadBase) {
+		return dificultad.aplicarIncremento(velocidadBase);
+	}
+	// a ver
+	private int calcularVelocidadBaseNivel() {
+		return Math.max(1, nivelActual + 1);
+	}
+
 }
