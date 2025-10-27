@@ -12,12 +12,15 @@ public class Partida {
 	private int nivelActual;
 	private int anchoArea;
 	private int altoArea;
+	// Alto disponible para el juego (excluye HUD inferior)
+	private int altoJuego;
 	private boolean enEjecucion;
 	private boolean terminada;
 	private Dificultad dificultad;
 
 	private static final int ANCHO_DEFAULT = 800;
 	private static final int ALTO_DEFAULT = 600;
+	private static final int MARGEN_INFERIOR = 32;
 
 	public Partida() {
 		this(Dificultad.CADETE);
@@ -26,6 +29,7 @@ public class Partida {
 	public Partida(Dificultad dificultad) {
 		this.anchoArea = ANCHO_DEFAULT;
 		this.altoArea = ALTO_DEFAULT;
+		this.altoJuego = ALTO_DEFAULT - MARGEN_INFERIOR;
 		this.muros = new ArrayList<>();
 		this.proyectiles = new ArrayList<>();
 		this.terminada = false;
@@ -36,8 +40,11 @@ public class Partida {
 		this.nivelActual = 1;
 		this.enEjecucion = true;
 
-		// centrado en la parte inferior
-		this.naveJugador = new NaveJugador(anchoArea / 2, altoArea - 50, 3);
+		this.altoJuego = Math.max(1, altoArea - MARGEN_INFERIOR);
+
+		// Crear jugador centrado en la parte inferior del área de juego
+		this.naveJugador = new NaveJugador(anchoArea / 2, altoJuego - 50, 3);
+		this.naveJugador.setLimites(anchoArea, altoJuego);
 
 		// Crear oleada
 		this.oleada = new Oleada();
@@ -52,7 +59,7 @@ public class Partida {
 		// 4 muros: 1/5, 2/5, 3/5, 4/5 del ancho
 		int[] posicionesX = { anchoArea / 5, (anchoArea * 2) / 5, (anchoArea * 3) / 5, (anchoArea * 4) / 5 };
 		for (int x : posicionesX) {
-			Muro m = new Muro(x, altoArea - 150);
+			Muro m = new Muro(x, altoJuego - 150);
 			m.inicializar();
 			muros.add(m);
 		}
@@ -216,9 +223,10 @@ public class Partida {
 
     public void limpiarProyectiles() {
         Iterator<Proyectil> iterator = proyectiles.iterator();
-        while (iterator.hasNext()) {
+		while (iterator.hasNext()) {
             Proyectil p = iterator.next();
-            if (!p.isActivo() || p.estaFueraDeArea(anchoArea, altoArea)) {
+			// Usar altoJuego como límite vertical para no invadir el HUD
+			if (!p.isActivo() || p.estaFueraDeArea(anchoArea, altoJuego)) {
                 iterator.remove();
             }
         }
