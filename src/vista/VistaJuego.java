@@ -291,14 +291,46 @@ public class VistaJuego extends JPanel {
                 }
             }
 
-            // HUD: puntos, vidas, creditos
-        Dificultad dificultadActual = p.getDificultad();
-        String dificultadTexto = dificultadActual != null ? dificultadActual.getEtiqueta() : "-";
-        String hud = String.format("Puntos: %d   Vidas: %d   Créditos: %d   Dificultad: %s",
-            p.getPuntuacion(), nj != null ? nj.getVidas() : 0,
-            controlador.getSistema().getCreditosDisponibles(), dificultadTexto);
+            // HUD clásico: arriba (puntos y dificultad), abajo (vidas y créditos)
             g2.setColor(Color.WHITE);
-            g2.drawString(hud, 10, 20);
+            g2.setFont(g2.getFont().deriveFont(16f));
+
+            Dificultad dificultadActual = p.getDificultad();
+            String dificultadTexto = dificultadActual != null ? dificultadActual.getEtiqueta() : "-";
+
+            // Arriba izquierda: Puntos
+            String puntosTxt = String.format("PUNTOS %06d", Math.max(0, p.getPuntuacion()));
+            g2.drawString(puntosTxt, 12, 22);
+
+            // Arriba derecha: Dificultad
+            String difTxt = "DIFICULTAD " + dificultadTexto;
+            int difW = g2.getFontMetrics().stringWidth(difTxt);
+            g2.drawString(difTxt, getWidth() - difW - 12, 22);
+
+            // Abajo izquierda: vidas (iconos o texto)
+            int baseY = getHeight() - 12;
+            int vidas = nj != null ? nj.getVidas() : 0;
+            int iconW = 24, iconH = 14, gap = 8;
+            int drawX = 12;
+            if (playerImg != null && vidas > 0) {
+                for (int i = 0; i < vidas; i++) {
+                    g2.drawImage(playerImg, drawX, baseY - iconH, iconW, iconH, null);
+                    drawX += iconW + gap;
+                }
+            } else {
+                String vidasTxt = "VIDAS: " + vidas;
+                g2.drawString(vidasTxt, drawX, baseY);
+                drawX += g2.getFontMetrics().stringWidth(vidasTxt) + gap;
+            }
+
+            // Abajo derecha: créditos
+            int creditos = 0;
+            try {
+                creditos = controlador.getSistema().getCreditosDisponibles();
+            } catch (Exception ignore) {}
+            String credTxt = String.format("CRÉDITOS %02d", Math.max(0, creditos));
+            int credW = g2.getFontMetrics().stringWidth(credTxt);
+            g2.drawString(credTxt, getWidth() - credW - 12, baseY);
         } finally {
             g2.dispose();
         }
