@@ -148,11 +148,16 @@ public class VistaJuego extends JPanel {
             controlador.procesarInput(dir, disparar);
             controlador.actualizar();
 
+            
             // If partida ended, return to menu and update credits/ranking
             if (controlador.getPartidaActual() == null) {
                 // partida finalizada por el controlador
                 timer.stop();
-                padre.showMenu();
+                // en VistaJuego.java
+                if (controlador.getTerminada()) {
+                System.out.println("Llegue hasta aca");
+                padre.showGameOver();
+            }
             }
 
             repaint();

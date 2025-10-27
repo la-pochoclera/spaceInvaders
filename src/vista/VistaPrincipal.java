@@ -13,6 +13,7 @@ public class VistaPrincipal extends JFrame {
     public static final String MENU = "MENU";
     public static final String JUEGO = "JUEGO";
     public static final String RANKING = "RANKING";
+    public static final String GAMEOVER = "GAMEOVER";
 
     private ControladorPrincipal controlador;
     private CardLayout cardLayout;
@@ -20,6 +21,7 @@ public class VistaPrincipal extends JFrame {
     private VistaMenu vistaMenu;
     private VistaJuego vistaJuego;
     private VistaRanking vistaRanking;
+    private VistaJuegoTerminado vistaJuegoTerminado;
 
     public VistaPrincipal() {
         super("Space Invaders");
@@ -38,12 +40,17 @@ public class VistaPrincipal extends JFrame {
         vistaMenu = new VistaMenu(this);
         vistaJuego = new VistaJuego(this);
         vistaRanking = new VistaRanking(this);
+        vistaJuegoTerminado = new VistaJuegoTerminado(this);
 
         cardsPanel.add(vistaMenu, MENU);
         cardsPanel.add(vistaJuego, JUEGO);
         cardsPanel.add(vistaRanking, RANKING);
+        cardsPanel.add(vistaJuegoTerminado, GAMEOVER);
 
         add(cardsPanel, BorderLayout.CENTER);
+
+        showMenu();
+        setVisible(true);
     }
 
     public ControladorPrincipal getControlador() {
@@ -80,5 +87,16 @@ public class VistaPrincipal extends JFrame {
 			vistaRanking.actualizarRanking();
 		}
         cardLayout.show(cardsPanel, RANKING);
+    }
+
+    public void showGameOver(){
+        if(vistaJuego != null){
+            vistaJuego.detener();
+        }
+        cardLayout.show(cardsPanel, GAMEOVER);
+    }
+
+    public void pasarNombre(String nombre){
+            controlador.pasarNombre(nombre);
     }
 }

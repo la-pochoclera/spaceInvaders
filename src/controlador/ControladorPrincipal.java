@@ -7,10 +7,13 @@ import modelo.Sistema;
 public class ControladorPrincipal {
 	private Sistema sistema;
 	private Partida partidaActual;
+	private boolean terminada;
+	private int puntos;
 
 	public ControladorPrincipal() {
 		this.sistema = new Sistema();
 		this.partidaActual = null;
+		this.puntos = 0;
 	}
 
 	/**
@@ -30,6 +33,7 @@ public class ControladorPrincipal {
 		Dificultad dificultadSeleccionada = dificultad != null ? dificultad : Dificultad.CADETE;
 		partidaActual = new Partida(dificultadSeleccionada);
 		partidaActual.inicializar();
+		terminada = false;
 		System.out.println("Partida iniciada.");
 	}
 
@@ -67,9 +71,10 @@ public class ControladorPrincipal {
 			return;
 		}
 		int puntos = partidaActual.getPuntuacion();
-		sistema.actualizarRanking("Jugador", puntos);
+		this.puntos = puntos;
 		System.out.println("Partida finalizada. Puntos: " + puntos + (voluntariamente ? " (voluntaria)" : ""));
 		partidaActual = null;
+		terminada = true;
 	}
 
 	public void finalizarPartida() {
@@ -86,5 +91,13 @@ public class ControladorPrincipal {
 
 	public Partida getPartidaActual() {
 		return partidaActual;
+	}
+
+	public boolean getTerminada(){
+		return terminada;
+	}
+
+	public void pasarNombre(String nombre){
+		sistema.actualizarRanking(nombre, puntos);
 	}
 }
