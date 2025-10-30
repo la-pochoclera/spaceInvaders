@@ -59,6 +59,7 @@ public class VistaPrincipal extends JFrame {
 
     public void showMenu() {
         // parar juego si estaba en ejecución
+        try{
         if (vistaJuego != null) {
 			vistaJuego.detener();
 		}
@@ -66,18 +67,27 @@ public class VistaPrincipal extends JFrame {
         if (vistaMenu != null) {
 			vistaMenu.actualizarCreditos();
 		}
-        cardLayout.show(cardsPanel, MENU);
+        cardLayout.show(cardsPanel, MENU);}
+        catch(Exception e){
+            System.err.println("Hubo una excepcion: "+ e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void showJuego() {
+        try{
         cardLayout.show(cardsPanel, JUEGO);
         // iniciar loop/timer del panel de juego
         if (vistaJuego != null) {
 			vistaJuego.iniciar();
-		}
+		}}catch(Exception e){
+            System.err.println("Hubo una excepcion: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void showRanking() {
+        try{
         // parar juego si estaba en ejecución
         if (vistaJuego != null) {
 			vistaJuego.detener();
@@ -86,14 +96,23 @@ public class VistaPrincipal extends JFrame {
         if (vistaRanking != null) {
 			vistaRanking.actualizarRanking();
 		}
-        cardLayout.show(cardsPanel, RANKING);
+        cardLayout.show(cardsPanel, RANKING);}
+        catch(Exception e){
+            System.err.println("Hubo un error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void showGameOver(){
+        try{
         if(vistaJuego != null){
             vistaJuego.detener();
         }
-        cardLayout.show(cardsPanel, GAMEOVER);
+        cardLayout.show(cardsPanel, GAMEOVER);}
+        catch(Exception e){
+            System.err.println("Hubo un error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void pasarNombre(String nombre){
