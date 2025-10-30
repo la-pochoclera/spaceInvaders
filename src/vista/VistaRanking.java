@@ -151,7 +151,7 @@ public class VistaRanking extends JPanel {
         add(bottom, BorderLayout.SOUTH);
     
     }
-e.printStackTrace();
+
     public void actualizarRanking() {
         try{
             modelo.setRowCount(0);
@@ -160,7 +160,7 @@ e.printStackTrace();
                 modelo.addRow(new Object[]{er.getNombre(), er.getPuntuacion()});
         }
         }catch(Exception e){
-            System.err.println("Error al mostrar el ranking" + e.getMessage())
+            System.err.println("Error al mostrar el ranking" + e.getMessage());
             e.printStackTrace();
         }
     }

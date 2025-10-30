@@ -102,7 +102,7 @@ public class ControladorPrincipal {
 		sistema.actualizarRanking(nombre, puntos);
 	}
 
-	public ControladorPrincipal getInstance(){
+	public static ControladorPrincipal getInstance(){
 		return instance;
 	}
 }
