@@ -25,7 +25,7 @@ public class VistaPrincipal extends JFrame {
 
     public VistaPrincipal() {
         super("Space Invaders");
-        this.controlador = ControladorPrincipal.getInstance();
+        this.controlador = ControladorPrincipal.getInstancia();
         initUI();
     }
 

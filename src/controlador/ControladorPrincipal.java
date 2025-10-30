@@ -5,14 +5,14 @@ import modelo.Partida;
 import modelo.Sistema;
 
 public class ControladorPrincipal {
-	private static final ControladorPrincipal instance = new ControladorPrincipal();
+	private static ControladorPrincipal instancia;
 	private Sistema sistema;
 	private Partida partidaActual;
 	private boolean terminada;
 	private int puntos;
 
 	public ControladorPrincipal() {
-		this.sistema = Sistema.getInstance();
+		this.sistema = Sistema.getInstancia();
 		this.partidaActual = null;
 		this.puntos = 0;
 	}
@@ -97,7 +97,10 @@ public class ControladorPrincipal {
 		sistema.actualizarRanking(nombre, puntos);
 	}
 
-	public static ControladorPrincipal getInstance(){
-		return instance;
+	public static ControladorPrincipal getInstancia(){
+		if(instancia == null) {
+			instancia = new ControladorPrincipal();
+		}
+		return instancia;
 	}
 }
