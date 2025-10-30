@@ -5,6 +5,7 @@ import modelo.Partida;
 import modelo.Sistema;
 
 public class ControladorPrincipal {
+	private static final ControladorPrincipal instance = new ControladorPrincipal();
 	private Sistema sistema;
 	private Partida partidaActual;
 	private boolean terminada;
@@ -94,5 +95,9 @@ public class ControladorPrincipal {
 
 	public void pasarNombre(String nombre){
 		sistema.actualizarRanking(nombre, puntos);
+	}
+
+	public static ControladorPrincipal getInstance(){
+		return instance;
 	}
 }
