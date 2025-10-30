@@ -1,6 +1,7 @@
 package modelo;
 
 public class NaveInvasora {
+	private int vecesBajadas = 0;
 	private int posX;
 	private int posY;
 	private int velocidad;
@@ -19,6 +20,7 @@ public class NaveInvasora {
 
 	public void bajar(int deltaY) {
 		posY =posY+ deltaY;
+		vecesBajadas += 1;
 	}
 
 	public Proyectil disparar() {
@@ -47,6 +49,9 @@ public class NaveInvasora {
 	}
 
 	public void aumentarVelocidad(){
-		velocidad += 0.5;
+		if(vecesBajadas==2){
+			velocidad+=1;
+			vecesBajadas = 0;
+		}
 	}
 }

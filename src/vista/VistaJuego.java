@@ -155,7 +155,6 @@ public class VistaJuego extends JPanel {
                 timer.stop();
                 // en VistaJuego.java
                 if (controlador.getTerminada()) {
-                System.out.println("Llegue hasta aca");
                 padre.showGameOver();
             }
             }
