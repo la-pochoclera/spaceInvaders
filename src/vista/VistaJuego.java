@@ -146,6 +146,7 @@ public class VistaJuego extends JPanel {
 
             // Delegate input and update to controller
             controlador.procesarInput(dir, disparar);
+
             controlador.actualizar();
 
             

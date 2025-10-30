@@ -47,11 +47,4 @@ public class NaveInvasora {
 	public int getPosY() {
 		return posY;
 	}
-
-	public void aumentarVelocidad(){
-		if(vecesBajadas==2){
-			velocidad+=1;
-			vecesBajadas = 0;
-		}
-	}
 }

@@ -58,9 +58,8 @@ public class Muro {
 	}
 
 	public void reiniciarMuro() {
-		for (SegmentoMuro s : segmentos) {
-			s.reiniciar();
-		}
+		this.saludTotal = 1.0;
+		actualizarSegmentosSegunSalud();
 	}
 	public void recibirImpacto(boolean esAliado) {
 		double danio;

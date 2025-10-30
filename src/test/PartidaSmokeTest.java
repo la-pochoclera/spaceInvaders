@@ -6,11 +6,12 @@ import modelo.NaveInvasora;
 import modelo.Oleada;
 import modelo.Partida;
 import modelo.Proyectil;
+import modelo.Dificultad;
 
 public class PartidaSmokeTest {
     public static void main(String[] args) throws Exception {
         System.out.println("Iniciando test rápido de Partida y Oleada...");
-        Partida p = new Partida();
+        Partida p = new Partida(Dificultad.CADETE);
         p.inicializar();
 
         // 1) Jugador solo un proyectil

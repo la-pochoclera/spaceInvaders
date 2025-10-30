@@ -20,18 +20,13 @@ public class ControladorPrincipal {
 	 * Intenta iniciar una nueva partida: comprueba créditos, los consume y crea e
 	 * inicializa la partida.
 	 */
-	public void iniciarNuevaPartida() {
-		iniciarNuevaPartida(Dificultad.CADETE);
-	}
-
 	public void iniciarNuevaPartida(Dificultad dificultad) {
 		if (!sistema.tieneCreditos()) {
 			System.out.println("No hay créditos disponibles.");
 			return;
 		}
 		sistema.consumirCredito();
-		Dificultad dificultadSeleccionada = dificultad != null ? dificultad : Dificultad.CADETE;
-		partidaActual = new Partida(dificultadSeleccionada);
+		partidaActual = new Partida(dificultad);
 		partidaActual.inicializar();
 		terminada = false;
 		System.out.println("Partida iniciada.");

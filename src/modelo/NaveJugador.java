@@ -1,7 +1,6 @@
 package modelo;
 
 public class NaveJugador {
-	private String nombre;
 	private int puntuacion;
 	private int vidas;
 	private int posX;
@@ -19,7 +18,6 @@ public class NaveJugador {
 		this.vidas = vidas;
 		this.puntuacion = 0;
 		this.velocidad = 8;
-		this.nombre = "Jugador123";
 		this.proximoUmbralVidaExtra = 500;
 		this.anchoMax = 800;
 		this.altoMax = 600;
@@ -92,10 +90,6 @@ public class NaveJugador {
 	}
 
 	// Getters
-	public String getNombre() {
-		return nombre;
-	}
-
 	public int getPuntuacion() {
 		return puntuacion;
 	}

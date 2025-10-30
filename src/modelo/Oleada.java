@@ -84,7 +84,6 @@ public class Oleada {
 		for (NaveInvasora n : naves) {
 			if (n.isViva()) {
 				n.bajar(20); // bajar 20 píxeles
-				n.aumentarVelocidad();
 			}
 		}
 	}

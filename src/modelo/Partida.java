@@ -22,10 +22,6 @@ public class Partida {
 	private static final int ALTO_DEFAULT = 600;
 	private static final int MARGEN_INFERIOR = 32;
 
-	public Partida() {
-		this(Dificultad.CADETE);
-	}
-
 	public Partida(Dificultad dificultad) {
 		this.anchoArea = ANCHO_DEFAULT;
 		this.altoArea = ALTO_DEFAULT;
@@ -33,7 +29,7 @@ public class Partida {
 		this.muros = new ArrayList<>();
 		this.proyectiles = new ArrayList<>();
 		this.terminada = false;
-		this.dificultad = dificultad != null ? dificultad : Dificultad.CADETE;
+		this.dificultad = dificultad;
 	}
 
 	public void inicializar() {
