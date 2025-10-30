@@ -3,18 +3,15 @@ package controlador;
 import modelo.Dificultad;
 import modelo.Partida;
 import modelo.Sistema;
-import vista.GestorSonidos;
 
 public class ControladorPrincipal {
 	private Sistema sistema;
 	private Partida partidaActual;
 	private boolean terminada;
 	private int puntos;
-	private GestorSonidos sonidos;
 
 	public ControladorPrincipal() {
-		this.sistema = new Sistema();
-		this.sonidos =new GestorSonidos();
+		this.sistema = Sistema.getInstance();
 		this.partidaActual = null;
 		this.puntos = 0;
 	}
@@ -62,7 +59,6 @@ public class ControladorPrincipal {
 			return;
 		}
 		partidaActual.procesarInput(direccion, disparar);
-		if(disparar) sonidos.reproducirDisparo();
 	}
 
 	/**

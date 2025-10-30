@@ -1,6 +1,7 @@
 package modelo;
 
 public class Sistema {
+	private static final Sistema instance = new Sistema();
 	private int creditosCargados;
 	private int creditosDisponibles;
 	private Ranking ranking;
@@ -9,6 +10,10 @@ public class Sistema {
 		this.creditosCargados = 0;
 		this.creditosDisponibles = 0;
 		this.ranking = new Ranking();
+	}
+
+	public static Sistema getInstance(){
+		return instance;
 	}
 
 	public void cargarCreditos(int cantidad) {
