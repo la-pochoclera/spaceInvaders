@@ -1,8 +1,12 @@
 package controlador;
 
+import java.io.Console;
+
 import modelo.Dificultad;
 import modelo.Partida;
 import modelo.Sistema;
+
+import views.DificultadView;
 
 public class ControladorPrincipal {
 	private static ControladorPrincipal instancia;
@@ -21,13 +25,15 @@ public class ControladorPrincipal {
 	 * Intenta iniciar una nueva partida: comprueba créditos, los consume y crea e
 	 * inicializa la partida.
 	 */
-	public void iniciarNuevaPartida(Dificultad dificultad) {
+	public void iniciarNuevaPartida(DificultadView dificultad) {
 		if (!sistema.tieneCreditos()) {
 			System.out.println("No hay créditos disponibles.");
 			return;
 		}
 		sistema.consumirCredito();
-		partidaActual = new Partida(dificultad);
+		Dificultad nuevaDificultad = new Dificultad(dificultad.getEtiqueta(), dificultad.getIncrementoVelocidad());
+		System.out.println("Iniciando nueva partida con dificultad: " + nuevaDificultad.getEtiqueta());
+		partidaActual = new Partida(nuevaDificultad);
 		partidaActual.inicializar();
 		terminada = false;
 		System.out.println("Partida iniciada.");

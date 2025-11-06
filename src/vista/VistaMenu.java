@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import controlador.ControladorPrincipal;
-import modelo.Dificultad;
+import views.DificultadView;
 import modelo.Sistema;
 
 public class VistaMenu extends JPanel {
@@ -50,7 +50,7 @@ public class VistaMenu extends JPanel {
     private JLabel lblCreditos;
     private JTextField txtCargar;
     private ButtonGroup grupoDificultad;
-    private Dificultad dificultadSeleccionada;
+    private DificultadView dificultadSeleccionada;
 
     public VistaMenu(VistaPrincipal padre) {
         this.padre = padre;
@@ -170,14 +170,14 @@ public class VistaMenu extends JPanel {
     dificultadPanel.add(lblDificultad);
     dificultadPanel.add(Box.createVerticalStrut(8));
     grupoDificultad = new ButtonGroup();
-    dificultadSeleccionada = Dificultad.CADETE;
+    dificultadSeleccionada = controlador.getSistema().getDificultad();
     JPanel radiosColumn = new JPanel();
     radiosColumn.setOpaque(false);
     radiosColumn.setLayout(new BoxLayout(radiosColumn, BoxLayout.Y_AXIS));
     radiosColumn.setAlignmentX(Component.CENTER_ALIGNMENT);
-    for (Dificultad dificultad : Dificultad.obtenerPredefinidas()) {
+    for (DificultadView dificultad : controlador.getSistema().obtenerDificultadesPredefinidas()) {
         JRadioButton radio = crearRadioDificultad(dificultad);
-        if (dificultad == dificultadSeleccionada) {
+        if (dificultad.getEtiqueta().equals(dificultadSeleccionada.getEtiqueta())) {
             radio.setSelected(true);
         }
         grupoDificultad.add(radio);
@@ -202,7 +202,7 @@ public class VistaMenu extends JPanel {
         lblCreditos.setText("Créditos disponibles: " + c);
     }
 
-    private JRadioButton crearRadioDificultad(Dificultad dificultad) {
+    private JRadioButton crearRadioDificultad(DificultadView dificultad) {
         JRadioButton radio = new JRadioButton(dificultad.getEtiqueta());
         radio.setOpaque(false);
         radio.setFont(FUENTE_TEXTO);
@@ -248,8 +248,9 @@ public class VistaMenu extends JPanel {
         };
     }
 
-    private Dificultad obtenerDificultadSeleccionada() {
-        return dificultadSeleccionada != null ? dificultadSeleccionada : Dificultad.CADETE;
+    private DificultadView obtenerDificultadSeleccionada() {
+        System.out.println("Dificultad seleccionada: " + (dificultadSeleccionada != null ? dificultadSeleccionada.getEtiqueta() : "null"));
+        return dificultadSeleccionada != null ? dificultadSeleccionada : controlador.getSistema().getDificultad();
     }
 
     private void estilizarBoton(JButton boton) {

@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import controlador.ControladorPrincipal;
-import modelo.Dificultad;
+import views.DificultadView;
 import modelo.Muro;
 import modelo.NaveInvasora;
 import modelo.NaveJugador;
@@ -295,7 +295,7 @@ public class VistaJuego extends JPanel {
             g2.setColor(Color.WHITE);
             g2.setFont(g2.getFont().deriveFont(16f));
 
-            Dificultad dificultadActual = p.getDificultad();
+            DificultadView dificultadActual = controlador.getPartidaActual().getDificultad();
             String dificultadTexto = dificultadActual != null ? dificultadActual.getEtiqueta() : "-";
 
             // Arriba izquierda: Puntos

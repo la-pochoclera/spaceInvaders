@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import views.DificultadView;
+
 public class Partida {
 	private NaveJugador naveJugador;
 	private Oleada oleada;
@@ -263,8 +265,8 @@ public class Partida {
 		return dx * dx + dy * dy <= umbral * umbral;
 	}
 
-	public Dificultad getDificultad() {
-		return dificultad;
+	public DificultadView getDificultad() {
+		return dificultad.toView();
 	}
 	// a ver
 	private int ajustarVelocidad(int velocidadBase) {
