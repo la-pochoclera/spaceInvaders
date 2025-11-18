@@ -3,6 +3,9 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import views.MuroView;
+import views.SegmentoMuroView;
+
 public class Muro {
 	private int posX;
 	private int posY;
@@ -129,5 +132,13 @@ public class Muro {
 
 	public double getSaludTotal() {
 		return saludTotal;
+	}
+
+	public MuroView toView() {
+		List<SegmentoMuroView> segmentos = new ArrayList<>();
+		for (SegmentoMuro s : this.segmentos) {
+			segmentos.add(s.toView());
+		}
+		return new MuroView(posX, posY, segmentos);
 	}
 }

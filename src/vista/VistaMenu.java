@@ -27,7 +27,6 @@ import javax.swing.SwingUtilities;
 
 import controlador.ControladorPrincipal;
 import views.DificultadView;
-import modelo.Sistema;
 
 public class VistaMenu extends JPanel {
     private static final Color COLOR_FONDO = new Color(12, 16, 38);
@@ -79,8 +78,8 @@ public class VistaMenu extends JPanel {
         btnIniciar.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnIniciar.addActionListener(e -> {
             // Validar créditos via el sistema
-            Sistema s = controlador.getSistema();
-            if (!s.tieneCreditos()) {
+            boolean tieneCreditos = controlador.getSistema().tieneCreditos();
+            if (!tieneCreditos) {
                 JOptionPane.showMessageDialog(this, "No hay créditos disponibles. Cargue créditos.", "Créditos", JOptionPane.WARNING_MESSAGE);
                 return;
             }

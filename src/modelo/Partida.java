@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import views.DificultadView;
+import views.ProyectilView;
+import views.MuroView;
+import views.SegmentoMuroView;
+import views.NaveJugadorView;
+import views.PartidaView;
 
 public class Partida {
 	private NaveJugador naveJugador;
@@ -146,19 +151,27 @@ public class Partida {
 		}
 	}
 
-	public NaveJugador getNaveJugador() {
-		return naveJugador;
+	public NaveJugadorView getNaveJugador() {
+		return naveJugador.toView();
 	}
 
 	public Oleada getOleada() {
 		return oleada;
 	}
 
-	public List<Muro> getMuros() {
-		return muros;
+	public List<MuroView> getMuros() {
+		List<MuroView> murosView = new ArrayList<>();
+		for (Muro m : this.muros) {
+			murosView.add(m.toView());
+		}
+		return murosView;
 	}
 
-	public List<Proyectil> getProyectiles() {
+	public List<ProyectilView> getProyectiles() {
+		List<ProyectilView> proyectiles = new ArrayList<>();
+		for (Proyectil p : this.proyectiles) {
+			proyectiles.add(p.toView());
+		}
 		return proyectiles;
 	}
 
@@ -277,4 +290,11 @@ public class Partida {
 		return Math.max(1, nivelActual + 1);
 	}
 
+	public PartidaView toView() {
+		return new PartidaView(dificultad.toView(),
+				naveJugador.toView(),
+				oleada.toView(),
+				getMuros(),
+				getProyectiles());
+	}
 }

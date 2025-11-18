@@ -1,5 +1,7 @@
 package modelo;
 
+import views.NaveJugadorView;
+
 public class NaveJugador {
 	private int puntuacion;
 	private int vidas;
@@ -104,5 +106,9 @@ public class NaveJugador {
 
 	public int getPosY() {
 		return posY;
+	}
+
+	public NaveJugadorView toView() {
+		return new NaveJugadorView(puntuacion, vidas, posX, posY, anchoMax, altoMax);
 	}
 }

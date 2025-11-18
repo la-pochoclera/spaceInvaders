@@ -9,6 +9,10 @@ public class DificultadView {
         this.incrementoVelocidad = incrementoVelocidad;
     }
 
+    public DificultadView(){
+        
+    }
+
     public String getEtiqueta() {
         return etiqueta;
     }

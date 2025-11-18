@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import controlador.ControladorPrincipal;
-import modelo.EntradaRanking;
+import views.EntradaRankingView;
 
 public class VistaRanking extends JPanel {
     private final VistaPrincipal padre;
@@ -155,10 +155,10 @@ public class VistaRanking extends JPanel {
     public void actualizarRanking() {
         try{
             modelo.setRowCount(0);
-            List<EntradaRanking> entradas = controlador.getSistema().getRanking().getEntradas();
-            for (EntradaRanking er : entradas) {
+            List<EntradaRankingView> entradas = controlador.getSistema().getRanking().getEntradas();
+            for (EntradaRankingView er : entradas) {
                 modelo.addRow(new Object[]{er.getNombre(), er.getPuntuacion()});
-        }
+            }
         }catch(Exception e){
             System.err.println("Error al mostrar el ranking" + e.getMessage());
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package modelo;
 
+import views.SegmentoMuroView;
+
 public class SegmentoMuro {
 	private int posX;
 	private int posY;
@@ -47,5 +49,9 @@ public class SegmentoMuro {
 	// Setter para que Muro controle cuáles segmentos están activos
 	public void setSalud(double salud) {
 		this.salud = salud <= 0.0 ? 0.0 : 1.0;
+	}
+
+	public SegmentoMuroView toView() {
+		return new SegmentoMuroView(posX, posY, salud, ancho, alto);
 	}
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import views.NaveInvasoraView;
+import views.OleadaView;
+
 public class Oleada {
 	private List<NaveInvasora> naves;
 	private int direccion; // 1 = derecha, -1 = izquierda
@@ -149,5 +152,21 @@ public class Oleada {
 
 	public List<NaveInvasora> getNaves() {
 		return naves;
+	}
+
+	public List<NaveInvasoraView> getNavesView() {
+		List<NaveInvasoraView> navesView = new ArrayList<>();
+		for (NaveInvasora n : naves) {
+			navesView.add(n.toView());
+		}
+		return navesView;
+	}
+
+	public OleadaView toView() {
+		List<NaveInvasoraView> navesView = new ArrayList<>();
+		for (NaveInvasora n : naves) {
+			navesView.add(n.toView());
+		}
+		return new OleadaView(navesView);
 	}
 }

@@ -17,12 +17,12 @@ import javax.swing.Timer;
 
 import controlador.ControladorPrincipal;
 import views.DificultadView;
-import modelo.Muro;
-import modelo.NaveInvasora;
-import modelo.NaveJugador;
-import modelo.Partida;
-import modelo.Proyectil;
-import modelo.SegmentoMuro;
+import views.ProyectilView;
+import views.MuroView;
+import views.SegmentoMuroView;
+import views.NaveJugadorView;
+import views.NaveInvasoraView;
+import views.PartidaView;
 
 public class VistaJuego extends JPanel {
     private VistaPrincipal padre;
@@ -209,7 +209,7 @@ public class VistaJuego extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Partida p = controlador.getPartidaActual();
+        PartidaView p = controlador.getPartidaActual();
         Graphics2D g2 = (Graphics2D) g.create();
         try {
             // Draw background image if available
@@ -228,7 +228,7 @@ public class VistaJuego extends JPanel {
             }
 
             // Draw player
-            NaveJugador nj = p.getNaveJugador();
+            NaveJugadorView nj = p.getNaveJugador();
             if (nj != null) {
                 int shipW = 40;
                 int shipH = 20;
@@ -241,8 +241,8 @@ public class VistaJuego extends JPanel {
 
             // Draw invaders
             if (p.getOleada() != null) {
-                List<NaveInvasora> naves = p.getOleada().getNaves();
-                for (NaveInvasora n : naves) {
+                List<NaveInvasoraView> naves = p.getOleada().getNavesView();
+                for (NaveInvasoraView n : naves) {
                     if (!n.isViva()) {
 						continue;
 					}
@@ -257,9 +257,9 @@ public class VistaJuego extends JPanel {
             }
 
             // Draw muros
-            List<Muro> muros = p.getMuros();
-            for (Muro m : muros) {
-                for (SegmentoMuro s : m.getSegmentos()) {
+            List<MuroView> muros = p.getMuros();
+            for (MuroView m : muros) {
+                for (SegmentoMuroView s : m.getSegmentos()) {
                     if (s.estaDestruido()) {
 						continue;
 					}
@@ -277,8 +277,8 @@ public class VistaJuego extends JPanel {
             }
 
             // Draw projectiles
-            List<Proyectil> proyectiles = p.getProyectiles();
-            for (Proyectil pr : proyectiles) {
+            List<ProyectilView> proyectiles = p.getProyectiles();
+            for (ProyectilView pr : proyectiles) {
                 if (!pr.isActivo()) {
 					continue;
 				}

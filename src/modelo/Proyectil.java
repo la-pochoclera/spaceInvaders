@@ -1,5 +1,7 @@
 package modelo;
 
+import views.ProyectilView;
+
 public class Proyectil {
 	private int posX;
 	private int posY;
@@ -54,4 +56,8 @@ public class Proyectil {
 	public boolean isActivo() {
 		return activo;
 	}
+
+	public ProyectilView toView() {
+        return new ProyectilView(posX, posY, velocidad, esAliado, activo);
+    }
 }

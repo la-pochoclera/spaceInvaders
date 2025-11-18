@@ -1,12 +1,11 @@
 package controlador;
 
-import java.io.Console;
-
 import modelo.Dificultad;
 import modelo.Partida;
 import modelo.Sistema;
 
 import views.DificultadView;
+import views.PartidaView;
 
 public class ControladorPrincipal {
 	private static ControladorPrincipal instancia;
@@ -91,8 +90,8 @@ public class ControladorPrincipal {
 		return sistema;
 	}
 
-	public Partida getPartidaActual() {
-		return partidaActual;
+	public PartidaView getPartidaActual() {
+		return partidaActual != null ? partidaActual.toView() : null;
 	}
 
 	public boolean getTerminada(){

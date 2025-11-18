@@ -1,7 +1,8 @@
 package modelo;
 
+import views.NaveInvasoraView;
+
 public class NaveInvasora {
-	private int vecesBajadas = 0;
 	private int posX;
 	private int posY;
 	private int velocidad;
@@ -20,7 +21,6 @@ public class NaveInvasora {
 
 	public void bajar(int deltaY) {
 		posY =posY+ deltaY;
-		vecesBajadas += 1;
 	}
 
 	public Proyectil disparar() {
@@ -46,5 +46,9 @@ public class NaveInvasora {
 
 	public int getPosY() {
 		return posY;
+	}
+
+	public NaveInvasoraView toView() {
+		return new NaveInvasoraView(posX, posY, velocidad, viva);
 	}
 }
