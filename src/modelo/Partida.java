@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import excepciones.PartidaException;
 import views.DificultadView;
 import views.ProyectilView;
 import views.MuroView;
@@ -29,14 +30,17 @@ public class Partida {
 	private static final int ALTO_DEFAULT = 600;
 	private static final int MARGEN_INFERIOR = 32;
 
-	public Partida(Dificultad dificultad) {
+	public Partida(Dificultad dificultad){
 		this.anchoArea = ANCHO_DEFAULT;
 		this.altoArea = ALTO_DEFAULT;
 		this.altoJuego = ALTO_DEFAULT - MARGEN_INFERIOR;
 		this.muros = new ArrayList<>();
 		this.proyectiles = new ArrayList<>();
 		this.terminada = false;
-		this.dificultad = dificultad;
+		if (dificultad == null) {
+        	throw new PartidaException("La dificultad no puede ser nula");
+    	}
+    	this.dificultad = dificultad;
 	}
 
 	public void inicializar() {
@@ -76,7 +80,7 @@ public class Partida {
 		oleada.moverNaves();
 
 		// 1.1 Colisión invasores-jugador => termina la partida
-		if (ColisionInvasoresConJugador()) {
+		if (colisionInvasoresConMuros()) {
 			terminada = true;
 			return;
 		}
@@ -297,4 +301,23 @@ public class Partida {
 				getMuros(),
 				getProyectiles());
 	}
+
+	private boolean colisionInvasoresConMuros() {
+    final int UMBRAL = 10; // distancia mínima para contacto
+    for (NaveInvasora n : oleada.getNaves()) {
+        if (!n.isViva()) continue;
+
+        for (Muro m : muros) {
+            for (SegmentoMuro s : m.getSegmentos()) {
+                if (s.estaDestruido()) continue;
+
+                if (proximidad(n.getPosX(), n.getPosY(), s.getPosX(), s.getPosY(), UMBRAL)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 }
