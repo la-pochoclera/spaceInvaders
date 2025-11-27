@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import excepciones.PartidaException;
+import excepciones.JuegoException;
 import views.DificultadView;
 import views.ProyectilView;
 import views.MuroView;
-import views.SegmentoMuroView;
 import views.NaveJugadorView;
 import views.PartidaView;
 
@@ -38,7 +37,7 @@ public class Partida {
 		this.proyectiles = new ArrayList<>();
 		this.terminada = false;
 		if (dificultad == null) {
-        	throw new PartidaException("La dificultad no puede ser nula");
+        	throw new JuegoException("La dificultad no puede ser nula");
     	}
     	this.dificultad = dificultad;
 	}
@@ -80,7 +79,7 @@ public class Partida {
 		oleada.moverNaves();
 
 		// 1.1 Colisión invasores-jugador => termina la partida
-		if (colisionInvasoresConMuros()) {
+		if (ColisionInvasoresConJugador() || colisionInvasoresConMuros()) {
 			terminada = true;
 			return;
 		}

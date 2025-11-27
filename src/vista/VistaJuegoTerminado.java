@@ -40,6 +40,8 @@ public class VistaJuegoTerminado extends JPanel {
         botonContinuar.setBackground(Color.DARK_GRAY);
         botonContinuar.setForeground(Color.WHITE);
         botonContinuar.setFocusPainted(false);
+        botonContinuar.setOpaque(true);
+        botonContinuar.setBorderPainted(false); 
         botonContinuar.setBounds(550, 460, 250, 60);
         add(botonContinuar);
 
